@@ -6,3 +6,13 @@ declare module "@mui/material/Button" {
     theme: true;
   }
 }
+
+declare module "@mui/material/styles" {
+  interface Palette {
+    menu: string; // Add the `menu` property to the `Palette` interface
+  }
+
+  interface PaletteOptions {
+    menu?: string; // Make the `menu` property optional
+  }
+}

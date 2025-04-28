@@ -7,6 +7,7 @@ export const lightTheme = createTheme({
     primary: {
       main: "#333",
     },
+    menu: "red",
   },
   components: {
     MuiButton: {
@@ -33,6 +34,7 @@ export const darkTheme = createTheme({
     primary: {
       main: "#60a5fa",
     },
+    menu: "blue",
   },
   components: {
     MuiButton: {
