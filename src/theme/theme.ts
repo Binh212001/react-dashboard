@@ -1,14 +1,26 @@
-"use client";
 import { createTheme } from "@mui/material/styles";
 
 export const lightTheme = createTheme({
+  typography: {
+    fontFamily: `'Poppins', 'Roboto', 'Helvetica', 'Arial', sans-serif`,
+  },
+
   palette: {
     mode: "light",
+    background: {
+      default: "#f5f5f5", // 🎯 màu nền toàn trang
+      paper: "#fff",
+    },
+    text: {
+      primary: "#444050", // màu chữ chính (body, h1–h6)
+    },
     primary: {
       main: "#333",
     },
-    menu: "red",
+    bgSecondary: "#333",
+    menu: "#ED5778",
   },
+
   components: {
     MuiButton: {
       variants: [
@@ -29,12 +41,23 @@ export const lightTheme = createTheme({
 });
 
 export const darkTheme = createTheme({
+  typography: {
+    fontFamily: `'Poppins', 'Roboto', 'Helvetica', 'Arial', sans-serif`,
+  },
   palette: {
     mode: "dark",
+    text: {
+      primary: "#cfcde4",
+    },
+    background: {
+      default: "#25293C",
+      paper: "#3A3D53",
+    },
     primary: {
       main: "#60a5fa",
     },
-    menu: "blue",
+    menu: "#8A80F3",
+    bgSecondary: "#333",
   },
   components: {
     MuiButton: {

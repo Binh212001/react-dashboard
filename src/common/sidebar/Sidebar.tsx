@@ -1,4 +1,5 @@
 import {
+  alpha,
   Collapse,
   Drawer,
   List,
@@ -8,13 +9,23 @@ import {
 } from "@mui/material";
 import { JSX, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import "./sidebarMenu.css";
+import "./sidebar.css";
 import {
   DashboardOutlined,
+  EmailOutlined,
   ExpandLess,
   ExpandMore,
+  MonetizationOnOutlined,
+  Person2,
+  Person2Outlined,
+  SettingsAccessibilityOutlined,
+  SettingsOutlined,
   ShoppingCartOutlined,
 } from "@mui/icons-material";
+import { ColorModeContext, useColorMode } from "../../theme/theme-context";
+import { textActive } from "../../util/theme.util";
+import { useMenuColor } from "../../hooks/useMenuColor";
+import { useMode } from "../../hooks/UseMode";
 
 export interface MenuItem {
   label: string;
@@ -37,13 +48,44 @@ const menuItems: MenuItem[] = [
       { label: "Category", to: "/category" },
     ],
   },
+  {
+    icon: <Person2Outlined />,
+    label: "Customer",
+    to: "/customer",
+  },
+  {
+    icon: <EmailOutlined />,
+    label: "Email",
+    to: "/email",
+  },
+  {
+    icon: <Person2Outlined />,
+    label: "User",
+    to: "/user",
+  },
+  {
+    icon: <Person2Outlined />,
+    label: "Role & permisstion",
+    to: "/role",
+  },
+  {
+    icon: <MonetizationOnOutlined />,
+    label: "Quotation",
+    to: "/quotation",
+  },
+  {
+    icon: <SettingsOutlined />,
+    label: "Setting",
+    to: "/setting",
+  },
 ];
 
-export function SidebarMenu() {
+export function Sidebar() {
   // Manage open/close state of menus by path
   const [openMenus, setOpenMenus] = useState<Record<string, boolean>>({});
-  const theme = useTheme();
+  const backgroundColor = useMenuColor();
   const location = useLocation();
+  const { mode } = useColorMode();
 
   const handleToggle = (path: string) => {
     setOpenMenus((prev) => ({
@@ -66,19 +108,21 @@ export function SidebarMenu() {
           component={item.to ? NavLink : "div"}
           to={item.to}
           onClick={() => hasChildren && handleToggle(path)}
+          className="menu-item"
           sx={{
             padding: "5px 10px",
-            // Apply active background color
             ...(isActive && {
-              backgroundColor: theme.palette.menu, // Use the theme menu color here
+              backgroundColor: backgroundColor,
+              color: textActive(useMode()),
             }),
-            // Optional: add hover effect for active link
             "&:hover": {
-              backgroundColor: theme.palette.menu,
+              backgroundColor: alpha(backgroundColor, 0.3),
+              borderRadius: "8px",
             },
           }}
         >
-          {item.icon ? item.icon : <></>}
+          {item.icon ? item.icon : <span> </span>}
+
           <ListItemText primary={item.label} />
           {hasChildren ? (
             openMenus[path] ? (
@@ -91,12 +135,12 @@ export function SidebarMenu() {
       );
 
       return (
-        <div key={path}>
+        <div className="menu-item" key={path}>
           {buttonContent}
 
           {hasChildren && (
             <Collapse in={openMenus[path]} timeout="auto" unmountOnExit>
-              <List component="div" disablePadding>
+              <List className="menu-item" component="div" disablePadding>
                 {renderMenu(item.children!, path)}
               </List>
             </Collapse>
@@ -116,6 +160,8 @@ export function SidebarMenu() {
         "& .MuiDrawer-paper": {
           width: 240,
           boxSizing: "border-box",
+          padding: "5px 10px",
+          backgroundColor: `${mode === "light" ? "#fff" : "#2F3349"}`,
         },
       }}
     >
