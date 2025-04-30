@@ -1,37 +1,47 @@
-import { createTheme } from "@mui/material/styles";
+import { alpha, createTheme } from "@mui/material/styles";
+import "@fontsource/poppins/400.css"; // Normal
+import "@fontsource/poppins/700.css"; // Bold
+import "@fontsource/poppins/400-italic.css"; // Italic
 
+const WHITE_COLOR = "#fff";
+
+const LIGHT_TXT_PRIMARY = "#444050";
+const LIGHT_DEFALUT_BG = "#f5f5f5";
+const LIGHT_PAPER_BG = "#fff";
+const LIGHT_PRIMARY_COLOR = "#EB3D63";
 export const lightTheme = createTheme({
   typography: {
-    fontFamily: `'Poppins', 'Roboto', 'Helvetica', 'Arial', sans-serif`,
+    fontFamily: `"Poppins", "Helvetica", "Arial", sans-serif`,
   },
-
   palette: {
     mode: "light",
     background: {
-      default: "#f5f5f5", // 🎯 màu nền toàn trang
-      paper: "#fff",
+      default: LIGHT_DEFALUT_BG,
+      paper: LIGHT_PAPER_BG,
     },
     text: {
-      primary: "#444050", // màu chữ chính (body, h1–h6)
+      primary: LIGHT_TXT_PRIMARY,
     },
-    primary: {
-      main: "#333",
+    color: {
+      primary: LIGHT_PRIMARY_COLOR,
     },
-    bgSecondary: "#333",
-    menu: "#ED5778",
+    tertiary: {
+      main: LIGHT_PRIMARY_COLOR,
+    },
   },
 
   components: {
     MuiButton: {
       variants: [
         {
-          props: { variant: "theme" },
+          props: { variant: "primary" },
           style: {
-            backgroundColor: "#333",
-            color: "#0284c7",
+            backgroundColor: LIGHT_PRIMARY_COLOR,
+            color: WHITE_COLOR,
             border: "1px solidrgb(235, 253, 186)",
             "&:hover": {
-              backgroundColor: "red",
+              backgroundColor: alpha(LIGHT_PRIMARY_COLOR, 0.9),
+              boxShadow: "0 4px 12px rgba(0, 0, 0, 0.3)",
             },
           },
         },
@@ -40,34 +50,44 @@ export const lightTheme = createTheme({
   },
 });
 
+const DARK_TXT_PRIMARY = "#cfcde4";
+const DARK_DEFALUT_BG = "#25293C";
+const DARK_PAPER_BG = "#25293C";
+const DARK_PRIMARY_COLOR = "#8A80F3";
+
 export const darkTheme = createTheme({
   typography: {
-    fontFamily: `'Poppins', 'Roboto', 'Helvetica', 'Arial', sans-serif`,
+    fontFamily: `"Roboto", "Helvetica", "Arial", sans-serif`,
   },
   palette: {
     mode: "dark",
     text: {
-      primary: "#cfcde4",
+      primary: DARK_TXT_PRIMARY,
     },
     background: {
-      default: "#25293C",
-      paper: "#3A3D53",
+      default: DARK_DEFALUT_BG,
+      paper: DARK_PAPER_BG,
     },
-    primary: {
-      main: "#60a5fa",
+    color: {
+      primary: DARK_PRIMARY_COLOR,
     },
-    menu: "#8A80F3",
-    bgSecondary: "#333",
+    tertiary: {
+      main: DARK_PRIMARY_COLOR,
+    },
   },
   components: {
     MuiButton: {
       variants: [
         {
-          props: { variant: "theme" },
+          props: { variant: "primary" },
           style: {
-            backgroundColor: "#fff",
+            backgroundColor: DARK_PRIMARY_COLOR,
             border: "1px solid #333",
-            color: "#000",
+            color: WHITE_COLOR,
+            "&:hover": {
+              backgroundColor: alpha(DARK_PRIMARY_COLOR, 0.9),
+              boxShadow: "0 4px 12px rgba(0, 0, 0, 0.3)",
+            },
           },
         },
       ],

@@ -1,31 +1,26 @@
 import {
+  DashboardOutlined,
+  EmailOutlined,
+  ExpandLess,
+  ExpandMore,
+  MonetizationOnOutlined,
+  Person2Outlined,
+  SettingsOutlined,
+  ShoppingCartOutlined,
+} from "@mui/icons-material";
+import {
   alpha,
   Collapse,
   Drawer,
   List,
   ListItemButton,
   ListItemText,
-  useTheme,
 } from "@mui/material";
 import { JSX, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import "./sidebar.css";
-import {
-  DashboardOutlined,
-  EmailOutlined,
-  ExpandLess,
-  ExpandMore,
-  MonetizationOnOutlined,
-  Person2,
-  Person2Outlined,
-  SettingsAccessibilityOutlined,
-  SettingsOutlined,
-  ShoppingCartOutlined,
-} from "@mui/icons-material";
-import { ColorModeContext, useColorMode } from "../../theme/theme-context";
+import { useMuiTheme } from "../../hooks/mui/useMuiTheme";
 import { textActive } from "../../util/theme.util";
-import { useMenuColor } from "../../hooks/useMenuColor";
-import { useMode } from "../../hooks/UseMode";
+import "./sidebar.css";
 
 export interface MenuItem {
   label: string;
@@ -83,9 +78,8 @@ const menuItems: MenuItem[] = [
 export function Sidebar() {
   // Manage open/close state of menus by path
   const [openMenus, setOpenMenus] = useState<Record<string, boolean>>({});
-  const backgroundColor = useMenuColor();
+  const { mode, primarColor } = useMuiTheme();
   const location = useLocation();
-  const { mode } = useColorMode();
 
   const handleToggle = (path: string) => {
     setOpenMenus((prev) => ({
@@ -112,18 +106,18 @@ export function Sidebar() {
           sx={{
             padding: "5px 10px",
             ...(isActive && {
-              backgroundColor: backgroundColor,
-              color: textActive(useMode()),
+              backgroundColor: primarColor,
+              color: textActive(mode),
             }),
             "&:hover": {
-              backgroundColor: alpha(backgroundColor, 0.3),
+              backgroundColor: alpha(primarColor, 0.3),
               borderRadius: "8px",
             },
           }}
         >
           {item.icon ? item.icon : <span> </span>}
 
-          <ListItemText primary={item.label} />
+          <ListItemText sx={{ pl: 2 }} primary={item.label} />
           {hasChildren ? (
             openMenus[path] ? (
               <ExpandLess />

@@ -1,19 +1,30 @@
+import { TextField } from "@mui/material";
 import "@mui/material/Button";
 
 declare module "@mui/material/Button" {
   interface ButtonPropsVariantOverrides {
-    theme: true;
+    primary: true;
   }
 }
 
+import "@mui/material/styles";
 declare module "@mui/material/styles" {
   interface Palette {
-    menu: string; // Add the `menu` property to the `Palette` interface
-    bgSecondary: string;
+    tertiary: Palette["primary"];
+    color?: {
+      primary?: string;
+    };
   }
-
   interface PaletteOptions {
-    menu: string;
-    bgSecondary: string;
+    tertiary?: PaletteOptions["primary"];
+    color?: {
+      primary?: string;
+    };
+  }
+}
+
+declare module "@mui/material/InputBase" {
+  interface InputBasePropsColorOverrides {
+    tertiary: true;
   }
 }

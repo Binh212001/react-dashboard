@@ -3,7 +3,7 @@ import { Button } from "@mui/material";
 function Dashboard() {
   return (
     <div>
-      <Button variant="theme">MyByn</Button>
+      <Button variant="primary">MyByn</Button>
     </div>
   );
 }
