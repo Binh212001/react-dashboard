@@ -2,12 +2,14 @@ import { AddOutlined } from "@mui/icons-material";
 import {
   Button,
   Checkbox,
+  Drawer,
   Stack,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
+  TextField,
   Typography,
 } from "@mui/material";
 import { useState } from "react";
@@ -16,7 +18,8 @@ import {
   useDeleteCategoryMutation,
   useGetCategoriesQuery,
 } from "../../service/categoryApi";
-import { StyledInput } from "../../common/form";
+
+import AddCategory from "./AddCategory";
 
 export interface Category {
   id: string; // ID của category
@@ -32,6 +35,7 @@ export interface Category {
 
 function Category() {
   const [selectedRows, setSelectedRows] = useState<Set<string>>(new Set()); // Lưu trữ các mục được chọn
+  const [open, setOpen] = useState<boolean>(false);
 
   const { data, isLoading, isError, refetch } = useGetCategoriesQuery({});
   const [deleteCategory] = useDeleteCategoryMutation();
@@ -56,6 +60,10 @@ function Category() {
     }
   };
 
+  const toggleDrawer = (newOpen: boolean) => () => {
+    setOpen(newOpen);
+  };
+
   // Xóa các category đã chọn
   const handleDeleteSelected = async () => {
     const idsToDelete = Array.from(selectedRows);
@@ -71,9 +79,13 @@ function Category() {
   return (
     <div>
       <Stack direction="row" justifyContent="space-between" alignItems="center">
-        <StyledInput placeholder="Search..." />
+        <TextField placeholder="Search" color="tertiary" />
         <Stack direction="row" gap={2}>
-          <Button variant="primary" startIcon={<AddOutlined />}>
+          <Button
+            onClick={toggleDrawer(true)}
+            variant="primary"
+            startIcon={<AddOutlined />}
+          >
             Add Category
           </Button>
 
@@ -143,6 +155,10 @@ function Category() {
           </Table>
         )}
       </Stack>
+
+      <Drawer open={open} anchor="right" onClose={toggleDrawer(false)}>
+        <AddCategory onClose={toggleDrawer(false)} />
+      </Drawer>
     </div>
   );
 }

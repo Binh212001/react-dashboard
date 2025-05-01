@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { CategoryReq } from "../app/category/AddCategory";
 
 export const categoryApi = createApi({
   reducerPath: "categoryApi",
@@ -7,7 +8,6 @@ export const categoryApi = createApi({
     baseUrl: "http://localhost:3000/",
 
     prepareHeaders: (headers) => {
-      headers.set("Content-Type", "application/json");
       return headers;
     },
   }),
@@ -20,11 +20,22 @@ export const categoryApi = createApi({
     }),
 
     createCategory: builder.mutation({
-      query: (formData) => ({
-        url: "category",
-        method: "POST",
-        body: formData,
-      }),
+      query: (formData: CategoryReq) => {
+        const data = new FormData();
+        data.append("name", formData.name);
+        data.append("description", formData.description);
+        data.append("slug", formData.slug);
+        if (formData.files) {
+          data.append("files", formData.files); // 👈 Gửi file thực tế
+        }
+
+        return {
+          url: "category",
+          method: "POST",
+          body: data, // ✅ Gửi FormData
+          formData: true,
+        };
+      },
       invalidatesTags: ["Category"],
     }),
 
