@@ -15,6 +15,7 @@ import {
   List,
   ListItemButton,
   ListItemText,
+  useTheme,
 } from "@mui/material";
 import { JSX, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
@@ -78,8 +79,10 @@ const menuItems: MenuItem[] = [
 export function Sidebar() {
   // Manage open/close state of menus by path
   const [openMenus, setOpenMenus] = useState<Record<string, boolean>>({});
-  const { mode, primarColor } = useMuiTheme();
+  const { mode, primarColor, isMdDown } = useMuiTheme();
   const location = useLocation();
+
+  // Lấy giá trị breakpoint từ theme (600px là sm breakpoint)
 
   const handleToggle = (path: string) => {
     setOpenMenus((prev) => ({
@@ -117,7 +120,12 @@ export function Sidebar() {
         >
           {item.icon ? item.icon : <span> </span>}
 
-          <ListItemText sx={{ pl: 2 }} primary={item.label} />
+          <ListItemText
+            sx={{
+              pl: 2,
+            }}
+            primary={item.label}
+          />
           {hasChildren ? (
             openMenus[path] ? (
               <ExpandLess />

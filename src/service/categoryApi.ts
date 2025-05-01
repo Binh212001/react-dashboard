@@ -16,6 +16,7 @@ export const categoryApi = createApi({
       query: (params) => ({
         url: "category",
         method: "GET",
+        params,
       }),
     }),
 

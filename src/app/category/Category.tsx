@@ -36,8 +36,13 @@ export interface Category {
 function Category() {
   const [selectedRows, setSelectedRows] = useState<Set<string>>(new Set()); // Lưu trữ các mục được chọn
   const [open, setOpen] = useState<boolean>(false);
+  const [search, setSearch] = useState<string | null>(null);
 
-  const { data, isLoading, isError, refetch } = useGetCategoriesQuery({});
+  const { data, isLoading, isError, refetch } = useGetCategoriesQuery({
+    ...(search && {
+      q: search,
+    }),
+  });
   const [deleteCategory] = useDeleteCategoryMutation();
 
   const handleSelectRow = (id: string) => {
@@ -76,27 +81,35 @@ function Category() {
     }
   };
 
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(event.target.value);
+  };
+
   return (
     <div>
       <Stack direction="row" justifyContent="space-between" alignItems="center">
-        <TextField placeholder="Search" color="tertiary" />
+        <TextField
+          placeholder="Search"
+          color="tertiary"
+          onChange={handleChange}
+        />
+        {/* Nút Xóa các mục đã chọn */}
         <Stack direction="row" gap={2}>
+          {selectedRows.size > 0 && (
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={handleDeleteSelected}
+            >
+              Delete Selected
+            </Button>
+          )}
           <Button
             onClick={toggleDrawer(true)}
             variant="primary"
             startIcon={<AddOutlined />}
           >
             Add Category
-          </Button>
-
-          {/* Nút Xóa các mục đã chọn */}
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={handleDeleteSelected}
-            disabled={selectedRows.size === 0} // Vô hiệu hóa nút nếu không có mục nào được chọn
-          >
-            Delete Selected
           </Button>
         </Stack>
       </Stack>

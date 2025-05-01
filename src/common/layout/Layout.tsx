@@ -11,11 +11,9 @@ export function Layout() {
       <Container maxWidth="xl" className="flex-1">
         <Header />
         <div className="content">
-          <StyleBox>
-            <div className="p-30">
-              <Outlet />
-            </div>
-          </StyleBox>
+          <Box>
+            <Outlet />
+          </Box>
         </div>
       </Container>
     </div>
