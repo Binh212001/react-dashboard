@@ -2,7 +2,7 @@ import { Box, Stack } from "@mui/material";
 import ThemeToggleButton from "../../theme/theme-toggle-button";
 import "./header.css";
 import UserDropdown from "./userDropdown/UserDropdown";
-import { StyledTextField } from "../form/styleTextField";
+import { StyledInput } from "../form/styleInput";
 import { useMuiTheme } from "../../hooks/mui/useMuiTheme";
 
 export function Header() {
@@ -27,7 +27,7 @@ export function Header() {
       >
         {/* //Search */}
         <Box>
-          <StyledTextField placeholder="Search" />
+          <StyledInput placeholder="Search" />
         </Box>
         <Stack direction="row">
           <ThemeToggleButton />

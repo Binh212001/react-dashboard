@@ -1,3 +1,4 @@
+import { TextFieldPropsColorOverrides } from "./../../node_modules/@mui/material/esm/TextField/TextField.d";
 import { TextField } from "@mui/material";
 import "@mui/material/Button";
 
@@ -25,6 +26,12 @@ declare module "@mui/material/styles" {
 
 declare module "@mui/material/InputBase" {
   interface InputBasePropsColorOverrides {
+    tertiary: true;
+  }
+}
+
+declare module "@mui/material/TextField" {
+  interface TextFieldPropsColorOverrides {
     tertiary: true;
   }
 }

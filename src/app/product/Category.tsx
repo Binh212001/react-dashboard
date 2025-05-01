@@ -1,36 +1,147 @@
-import { useState } from "react";
 import { AddOutlined } from "@mui/icons-material";
-import { Button, MenuItem, SelectChangeEvent, Stack } from "@mui/material";
-import { StyledOption, StyledSelect, StyledTextField } from "../../common/form";
-import { MuiTable } from "../../common/table";
+import {
+  Button,
+  Checkbox,
+  Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Typography,
+} from "@mui/material";
+import { useState } from "react";
+import { CellItemWithImage } from "../../common/mui";
+import {
+  useDeleteCategoryMutation,
+  useGetCategoriesQuery,
+} from "../../service/categoryApi";
+import { StyledInput } from "../../common/form";
+
+export interface Category {
+  id: string; // ID của category
+  name: string; // Tên của category
+  slug: string; // Slug của category (chuỗi đơn giản dùng cho URL)
+  image: string; // URL của ảnh liên quan đến category
+  description: string | null;
+  createdAt: string; // Thời gian tạo category
+  updatedAt: string; // Thời gian cập nhật category
+  createdBy: string | null; // Người tạo category (có thể null nếu không có thông tin)
+  updatedBy: string | null; // Người cập nhật category (có thể null nếu không có thông tin)
+}
 
 function Category() {
-  const [page, setPage] = useState<string>("1");
+  const [selectedRows, setSelectedRows] = useState<Set<string>>(new Set()); // Lưu trữ các mục được chọn
 
-  const handleChange = (e: SelectChangeEvent) => {
-    setPage(e.target.value);
+  const { data, isLoading, isError, refetch } = useGetCategoriesQuery({});
+  const [deleteCategory] = useDeleteCategoryMutation();
+
+  const handleSelectRow = (id: string) => {
+    const newSelectedRows = new Set(selectedRows);
+    if (newSelectedRows.has(id)) {
+      newSelectedRows.delete(id); // Bỏ chọn nếu đã chọn
+    } else {
+      newSelectedRows.add(id); // Chọn nếu chưa chọn
+    }
+    setSelectedRows(newSelectedRows);
+  };
+
+  // Hàm chọn hoặc bỏ chọn tất cả
+  const handleSelectAll = () => {
+    if (selectedRows.size === data?.length) {
+      setSelectedRows(new Set()); // Bỏ chọn tất cả nếu đã chọn hết
+    } else {
+      const allIds: Set<string> = new Set(data?.map((row: Category) => row.id));
+      setSelectedRows(allIds); // Chọn tất cả
+    }
+  };
+
+  // Xóa các category đã chọn
+  const handleDeleteSelected = async () => {
+    const idsToDelete = Array.from(selectedRows);
+    try {
+      await Promise.all(idsToDelete.map((id) => deleteCategory(id).unwrap()));
+      refetch();
+      setSelectedRows(new Set()); // Reset các mục đã chọn sau khi xóa
+    } catch (err) {
+      alert("Error deleting categories");
+    }
   };
 
   return (
     <div>
-      <Stack direction="row" justifyContent="space-between">
-        <StyledTextField />
-
+      <Stack direction="row" justifyContent="space-between" alignItems="center">
+        <StyledInput placeholder="Search..." />
         <Stack direction="row" gap={2}>
-          <StyledSelect label="Page" value={page} onChange={handleChange}>
-            <MenuItem value="1">Page 1</MenuItem>
-            <MenuItem value="2">Page 2</MenuItem>
-            <MenuItem value="3">Page 3</MenuItem>
-          </StyledSelect>
-
           <Button variant="primary" startIcon={<AddOutlined />}>
             Add Category
+          </Button>
+
+          {/* Nút Xóa các mục đã chọn */}
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={handleDeleteSelected}
+            disabled={selectedRows.size === 0} // Vô hiệu hóa nút nếu không có mục nào được chọn
+          >
+            Delete Selected
           </Button>
         </Stack>
       </Stack>
 
       <Stack mt={3}>
-        <MuiTable />
+        {isLoading ? (
+          <Typography>Loading...</Typography> // Hiển thị trạng thái loading
+        ) : isError ? (
+          <Typography>Error loading categories.</Typography> // Hiển thị nếu có lỗi
+        ) : (
+          <Table>
+            <TableHead>
+              <TableRow>
+                {/* Cột checkbox "Chọn tất cả" */}
+                <TableCell padding="checkbox">
+                  <Checkbox
+                    checked={selectedRows.size === data?.length} // Kiểm tra xem tất cả có được chọn không
+                    onChange={handleSelectAll}
+                  />
+                </TableCell>
+
+                <TableCell>Name</TableCell>
+                <TableCell>Slug</TableCell>
+                <TableCell>Action</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {data?.map((cat: Category) => (
+                <TableRow key={cat.id}>
+                  {/* Cột checkbox cho mỗi hàng */}
+                  <TableCell padding="checkbox">
+                    <Checkbox
+                      checked={selectedRows.has(cat.id)} // Kiểm tra xem hàng có được chọn không
+                      onChange={() => handleSelectRow(cat.id)}
+                    />
+                  </TableCell>
+
+                  <CellItemWithImage
+                    label={cat.name}
+                    image={cat.image}
+                    description={cat.description}
+                  />
+                  <TableCell>{cat.slug}</TableCell>
+                  <TableCell>
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      onClick={() => handleDeleteSelected()} // Xóa các mục đã chọn
+                    >
+                      Delete
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        )}
       </Stack>
     </div>
   );
