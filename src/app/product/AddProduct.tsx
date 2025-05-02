@@ -18,11 +18,10 @@ import { UploadImage } from "../../common/uploadFile/UploadImage";
 function AddProduct() {
   const [image, setImage] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
-  const [value, setValue] = useState("one");
+  const [attItems, setAttItems] = useState<number[]>([1]);
+  const [variants, setVariant] = useState<{ [key: string]: string[] }>({});
+  console.log("🚀 ~ AddProduct ~ variants:", variants);
 
-  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-    setValue(newValue);
-  };
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -111,7 +110,22 @@ function AddProduct() {
 
           <StyleBox>
             <Typography variant="h6">Variants</Typography>
-            <DynamicAttributeForm />
+            {attItems.map((i, index) => {
+              return (
+                <DynamicAttributeForm
+                  setVariant={setVariant}
+                  key={index}
+                  variant={{
+                    color: ["red", "blue"],
+                    size: ["X", "XC"],
+                  }}
+                />
+              );
+            })}
+
+            <Button onClick={() => setAttItems((prev) => [...prev, 1])}>
+              Add item
+            </Button>
           </StyleBox>
         </Grid>
         {/* Priceing */}

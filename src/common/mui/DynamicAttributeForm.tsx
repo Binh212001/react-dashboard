@@ -1,100 +1,86 @@
-import React, { useState } from "react";
 import {
-  Box,
-  TextField,
-  Button,
+  Autocomplete,
+  Chip,
   Grid,
-  IconButton,
   MenuItem,
   Select,
-  InputLabel,
-  FormControl,
+  SelectChangeEvent,
+  TextField,
+  Typography,
 } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
+import { useState } from "react";
 
-interface AttributeRow {
-  attribute: string;
-  value: string;
+export interface Variant {
+  [key: string]: string[];
 }
 
-const ATTRIBUTE_OPTIONS = ["Color", "Size", "Memory", "Material"];
-
-export function DynamicAttributeForm() {
-  const [rows, setRows] = useState<AttributeRow[]>([
-    { attribute: "", value: "" },
-  ]);
-
-  const handleChange = (
-    index: number,
-    field: keyof AttributeRow,
-    value: string
-  ) => {
-    const updatedRows = [...rows];
-    updatedRows[index][field] = value;
-    setRows(updatedRows);
-  };
-
-  const handleAddRow = () => {
-    setRows([...rows, { attribute: "", value: "" }]);
-  };
-
-  const handleRemoveRow = (index: number) => {
-    const updatedRows = [...rows];
-    updatedRows.splice(index, 1);
-    setRows(updatedRows);
-  };
+export function DynamicAttributeForm({
+  variant,
+  setVariant,
+}: {
+  variant: Variant;
+  setVariant: Function;
+}) {
+  const [select, setSelect] = useState<string>("");
+  const [data, setData] = useState<string[]>([]);
+  const [value, setValue] = useState<string[]>([]);
 
   return (
-    <Box sx={{ p: 2 }}>
-      {rows.map((row, index) => (
-        <Grid
-          container
-          spacing={2}
-          alignItems="center"
-          key={index}
-          sx={{ mb: 1 }}
+    <Grid container columns={12} gap={2} mb={3}>
+      <Grid size={{ sm: 5 }}>
+        <Typography>Attribute</Typography>
+        <Select
+          color="tertiary"
+          value={select}
+          onChange={(e: SelectChangeEvent<string>) => {
+            setSelect(e.target.value);
+            setData(variant[e.target.value]);
+          }}
+          fullWidth
         >
-          <Grid size={5}>
-            <FormControl fullWidth>
-              <InputLabel>Attribute</InputLabel>
-              <Select
-                value={row.attribute}
-                label="Attribute"
-                onChange={(e) =>
-                  handleChange(index, "attribute", e.target.value)
-                }
-              >
-                {ATTRIBUTE_OPTIONS.map((opt) => (
-                  <MenuItem key={opt} value={opt}>
-                    {opt}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid size={5}>
+          {Object.keys(variant).map((key, index) => {
+            return (
+              <MenuItem key={index} value={key}>
+                {key}
+              </MenuItem>
+            );
+          })}
+        </Select>
+      </Grid>
+      <Grid size={{ sm: 5 }}>
+        <Typography>Value</Typography>
+        <Autocomplete
+          multiple
+          id="fixed-tags-demo"
+          color="tertiary"
+          value={value}
+          onChange={(event, newValue) => {
+            setValue(newValue);
+            setVariant((p: { [key: string]: string[] }) => {
+              return {
+                ...p,
+                [select]: newValue,
+              };
+            });
+          }}
+          options={data}
+          getOptionLabel={(option) => option}
+          renderValue={(values, getItemProps) =>
+            values.map((option, index) => {
+              const { key, ...itemProps } = getItemProps({ index });
+              return <Chip key={key} label={option} {...itemProps} />;
+            })
+          }
+          renderInput={(params) => (
             <TextField
-              label="Value"
-              value={row.value}
-              onChange={(e) => handleChange(index, "value", e.target.value)}
-              fullWidth
+              color="tertiary"
+              {...params}
+              label="Attribute"
+              placeholder="Favorites"
             />
-          </Grid>
-          <Grid size={2}>
-            <IconButton
-              color="error"
-              onClick={() => handleRemoveRow(index)}
-              disabled={rows.length === 1}
-            >
-              <DeleteIcon />
-            </IconButton>
-          </Grid>
-        </Grid>
-      ))}
-
-      <Button variant="outlined" onClick={handleAddRow}>
-        Add Row
-      </Button>
-    </Box>
+          )}
+        />
+      </Grid>
+    </Grid>
   );
 }
