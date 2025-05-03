@@ -1,6 +1,5 @@
 import {
   DashboardOutlined,
-  EmailOutlined,
   ExpandLess,
   ExpandMore,
   MonetizationOnOutlined,
@@ -15,7 +14,6 @@ import {
   List,
   ListItemButton,
   ListItemText,
-  useTheme,
 } from "@mui/material";
 import { JSX, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
@@ -37,6 +35,7 @@ const menuItems: MenuItem[] = [
     icon: <ShoppingCartOutlined />,
     label: "Product",
     children: [
+      { label: "List Product", to: "/product" },
       {
         label: "Add Product",
         to: "/add-product",
@@ -46,19 +45,25 @@ const menuItems: MenuItem[] = [
   },
   {
     icon: <Person2Outlined />,
-    label: "Customer",
-    to: "/customer",
-  },
-  {
-    icon: <EmailOutlined />,
-    label: "Email",
-    to: "/email",
-  },
-  {
-    icon: <Person2Outlined />,
     label: "User",
-    to: "/user",
+    children: [
+      { label: "List User", to: "/user" },
+      {
+        label: "Add user",
+        to: "/add-user",
+      },
+    ],
   },
+  // // {
+  // //   icon: <EmailOutlined />,
+  // //   label: "Email",
+  // //   to: "/email",
+  // // },
+  // {
+  //   icon: <Person2Outlined />,
+  //   label: "User",
+  //   to: "/user",
+  // },
   {
     icon: <Person2Outlined />,
     label: "Role & permisstion",
@@ -66,8 +71,8 @@ const menuItems: MenuItem[] = [
   },
   {
     icon: <MonetizationOnOutlined />,
-    label: "Quotation",
-    to: "/quotation",
+    label: "Order",
+    to: "/order",
   },
   {
     icon: <SettingsOutlined />,

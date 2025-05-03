@@ -20,6 +20,7 @@ import {
 } from "../../service/categoryApi";
 
 import AddCategory from "./AddCategory";
+import { StyleBox } from "../../common/styleBox";
 
 export interface Category {
   id: string; // ID của category
@@ -86,7 +87,7 @@ function Category() {
   };
 
   return (
-    <div>
+    <StyleBox>
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <TextField
           placeholder="Search"
@@ -172,7 +173,7 @@ function Category() {
       <Drawer open={open} anchor="right" onClose={toggleDrawer(false)}>
         <AddCategory onClose={toggleDrawer(false)} />
       </Drawer>
-    </div>
+    </StyleBox>
   );
 }
 

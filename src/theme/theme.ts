@@ -31,6 +31,13 @@ export const lightTheme = createTheme({
   },
 
   components: {
+    MuiOutlinedInput: {
+      styleOverrides: {
+        input: {
+          padding: "8px 16px", // top-bottom | left-right
+        },
+      },
+    },
     MuiButton: {
       variants: [
         {
@@ -76,6 +83,13 @@ export const darkTheme = createTheme({
     },
   },
   components: {
+    MuiOutlinedInput: {
+      styleOverrides: {
+        input: {
+          padding: "8px 16px", // top-bottom | left-right
+        },
+      },
+    },
     MuiButton: {
       variants: [
         {

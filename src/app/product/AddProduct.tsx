@@ -5,22 +5,36 @@ import {
   Grid,
   MenuItem,
   Select,
+  SelectChangeEvent,
   Stack,
   Switch,
   TextField,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { DynamicAttributeForm } from "../../common/mui";
 import { StyleBox } from "../../common/styleBox";
 import { UploadImage } from "../../common/uploadFile/UploadImage";
+
+interface Product {
+  name: string;
+  sku: string;
+  barcode: string;
+  description: string;
+}
 
 function AddProduct() {
   const [image, setImage] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [attItems, setAttItems] = useState<number[]>([1]);
   const [variants, setVariant] = useState<{ [key: string]: string[] }>({});
-  console.log("🚀 ~ AddProduct ~ variants:", variants);
+  const [product, setProduct] = useState<Product>({
+    name: "",
+    sku: "",
+    barcode: "",
+    description: "",
+  });
+  console.log("🚀 ~ AddProduct ~ product:", product);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -30,12 +44,30 @@ function AddProduct() {
     }
   };
 
+  const handleChange = (e: SelectChangeEvent) => {
+    e.preventDefault();
+    const name = e.target.name;
+    const value = e.target.value;
+    setProduct({
+      ...product,
+      [name]: value,
+    });
+  };
+
   const removeImage = () => {
     setImage(null);
     setPreview(null);
   };
+
+  const handeSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log(product);
+    console.log(image);
+    console.log(variants);
+  };
+
   return (
-    <Box component="div">
+    <Box component="form" onSubmit={(e) => handeSubmit(e)}>
       <StyleBox>
         <Stack
           direction="row"
@@ -52,7 +84,7 @@ function AddProduct() {
             <Button variant="outlined" color="secondary">
               Discard
             </Button>
-            <Button variant="outlined" color="warning">
+            <Button variant="outlined" color="warning" type="submit">
               Save Draft
             </Button>
             <Button variant="primary">Pushlish Product</Button>
@@ -71,6 +103,7 @@ function AddProduct() {
               color="tertiary"
               name="name"
               placeholder="Name"
+              onChange={(e: ChangeEvent<HTMLInputElement>) => handleChange(e)}
               fullWidth
               sx={{ mb: 3 }}
             />
@@ -80,6 +113,9 @@ function AddProduct() {
                 <TextField
                   color="tertiary"
                   name="sku"
+                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                    handleChange(e)
+                  }
                   fullWidth
                   placeholder="SKU"
                 />
@@ -88,6 +124,9 @@ function AddProduct() {
                 <Typography component="label">Barcode</Typography>
                 <TextField
                   color="tertiary"
+                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                    handleChange(e)
+                  }
                   fullWidth
                   name="barcode"
                   placeholder="0123-4567"
@@ -95,7 +134,14 @@ function AddProduct() {
               </Grid>
             </Grid>
             <Typography component="label">Description (Optional)</Typography>
-            <TextField fullWidth multiline rows={4} color="tertiary" />
+            <TextField
+              name="description"
+              onChange={(e: ChangeEvent<HTMLInputElement>) => handleChange(e)}
+              fullWidth
+              multiline
+              rows={4}
+              color="tertiary"
+            />
           </StyleBox>
           {/* Image product */}
           <StyleBox>
@@ -145,6 +191,9 @@ function AddProduct() {
               <Box key={name} mb={3}>
                 <Typography>{label}</Typography>
                 <TextField
+                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                    handleChange(e)
+                  }
                   color="tertiary"
                   name={name}
                   fullWidth
@@ -169,26 +218,50 @@ function AddProduct() {
             </Typography>
             <Box mb={3}>
               <Typography>Vendor</Typography>
-              <Select color="tertiary" name="vendor" fullWidth>
-                <MenuItem>sjkhdjka</MenuItem>
+              <Select
+                onChange={(e: SelectChangeEvent) => handleChange(e)}
+                color="tertiary"
+                name="vendor"
+                fullWidth
+              >
+                <MenuItem></MenuItem>
+                <MenuItem value={1}>sjkhdjka</MenuItem>
               </Select>
             </Box>
             <Box mb={3}>
               <Typography>Category</Typography>
-              <Select color="tertiary" name="category" fullWidth>
-                <MenuItem>sjkhdjka</MenuItem>
+              <Select
+                onChange={(e: SelectChangeEvent) => handleChange(e)}
+                color="tertiary"
+                name="category"
+                fullWidth
+              >
+                <MenuItem></MenuItem>
+                <MenuItem value={1}>sjkhdjka</MenuItem>
               </Select>
             </Box>
             <Box mb={3}>
               <Typography>Collection</Typography>
-              <Select color="tertiary" name="collection" fullWidth>
-                <MenuItem>sjkhdjka</MenuItem>
+              <Select
+                onChange={(e: SelectChangeEvent) => handleChange(e)}
+                color="tertiary"
+                name="collection"
+                fullWidth
+              >
+                <MenuItem></MenuItem>
+                <MenuItem value={1}>sjkhdjka</MenuItem>
               </Select>
             </Box>
             <Box mb={3}>
               <Typography>Status</Typography>
-              <Select color="tertiary" name="status" fullWidth>
-                <MenuItem>sjkhdjka</MenuItem>
+              <Select
+                onChange={(e: SelectChangeEvent) => handleChange(e)}
+                color="tertiary"
+                name="status"
+                fullWidth
+              >
+                <MenuItem></MenuItem>
+                <MenuItem value={1}>sjkhdjka</MenuItem>
               </Select>
             </Box>
           </StyleBox>

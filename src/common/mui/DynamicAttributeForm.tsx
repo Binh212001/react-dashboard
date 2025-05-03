@@ -72,12 +72,7 @@ export function DynamicAttributeForm({
             })
           }
           renderInput={(params) => (
-            <TextField
-              color="tertiary"
-              {...params}
-              label="Attribute"
-              placeholder="Favorites"
-            />
+            <TextField color="tertiary" {...params} placeholder="Favorites" />
           )}
         />
       </Grid>
